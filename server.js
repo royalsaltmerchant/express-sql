@@ -42,7 +42,7 @@ var newPerson = {
 }
 
 async function registerPerson(person) {
-  var sql = `
+  var sql = /*sql*/ `
     INSERT INTO people (fullname, gender, phone, age)
     VALUES ($1, $2, $3, $4)
     RETURNING id
@@ -52,13 +52,13 @@ async function registerPerson(person) {
 }
 
 async function getPerson(personId) {
-  var sql = `SELECT * FROM people WHERE id = ${personId}`;
+  var sql = /*sql*/ `SELECT * FROM people WHERE id = ${personId}`;
   return pool.query(sql);
 }
 
 async function editPerson(type, id, data) {
   if(type === 'age') {
-    var sql = `
+    var sql = /*sql*/ `
       UPDATE people
       SET age = ${data}
       WHERE id = ${id}
