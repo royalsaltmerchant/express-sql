@@ -1,4 +1,4 @@
-var express = require('express')
+import express from 'express';
 var app = express()
 var { Pool } = require("pg");
 
@@ -10,7 +10,7 @@ app.use(express.json())
 
 //Get Person page
 app.get('/person/:personId', async (req, res) => {
-  var sqlData = await getPerson(req.params.personId)
+  var sqlData = await getPerson(parseInt(req.params.personId))
   var person = sqlData.rows[0]
   res.render('pages/index', {person})
 });
@@ -41,7 +41,15 @@ var newPerson = {
   age: 26
 }
 
-async function registerPerson(person) {
+type Person = {
+  id: number,
+  fullName: string,
+  gender: string,
+  phone: string,
+  age: number
+}
+
+async function registerPerson(person: Person) {
   var sql = /*sql*/ `
     INSERT INTO people (fullname, gender, phone, age)
     VALUES ($1, $2, $3, $4)
@@ -51,12 +59,12 @@ async function registerPerson(person) {
   return pool.query(sql, values)
 }
 
-async function getPerson(personId) {
+async function getPerson(personId: number) {
   var sql = /*sql*/ `SELECT * FROM people WHERE id = ${personId}`;
   return pool.query(sql);
 }
 
-async function editPerson(type, id, data) {
+async function editPerson(type: string, id: number, data: string) {
   if(type === 'age') {
     var sql = /*sql*/ `
       UPDATE people
